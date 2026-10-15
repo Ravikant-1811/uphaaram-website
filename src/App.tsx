@@ -90,24 +90,15 @@ function ProductCard({ product }: { product: Product; index?: number }) {
 }
 
 function Hero() {
-  return <section className="hero">
-    <div className="hero-pattern pattern-one" /><div className="hero-pattern pattern-two" />
-    <div className="hero-content">
-      <div className="hero-copy">
-        <p className="eyebrow">UPHAARAM <i /> CURATING EMOTIONS</p>
-        <h1>More than gifts,<br /><em>emotions</em> beautifully curated.</h1>
-        <p>Thoughtfully handcrafted gifts designed to celebrate relationships, traditions and life's most meaningful moments.</p>
-        <div className="hero-actions"><ButtonLink href="#shop">Explore Collections</ButtonLink><ButtonLink href="#custom" secondary>Customise a Gift</ButtonLink></div>
-        <div className="hero-note"><Icon name="sparkle" size={17} /><span>Handcrafted in India</span><i /><span>Personalised for you</span></div>
-      </div>
-      <div className="hero-visual">
-        <div className="gold-arch" />
-        <div className="hero-image"><img src={photos.hero} alt="Uphaaram Premium 10 × 10 Hamper" /></div>
-        <div className="floating-card"><span>THE ART OF GIFTING</span><p>Made with intention.<br />Remembered with love.</p></div>
-        <div className="image-count"><span>01</span><i /><span>04</span></div>
-      </div>
+  return <section className="festive-banner" aria-label="Uphaaram Diwali gifting collection">
+    <div className="festive-banner-border" aria-hidden="true" />
+    <div className="festive-banner-sparkles" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span></div>
+    <div className="festive-banner-inner">
+      <a className="festive-banner-gift festive-banner-left" href={productHref("mini-3-jar")} aria-label="Explore the 3 Jar Hamper"><span className="festive-gift-halo" aria-hidden="true" /><img src="/assets/products/mini-3-jar.webp" alt="Uphaaram blue and gold 3 Jar Hamper" fetchPriority="high" /></a>
+      <div className="festive-banner-copy"><p className="festive-banner-eyebrow">THE UPHAARAM DIWALI EDIT</p><div className="festive-banner-flourish" aria-hidden="true"><span /><Icon name="lotus" size={30} /><span /></div><h1>This Diwali,<br /><em>gift a little joy.</em></h1><p>Beautiful hampers. Thoughtful details.<br />Made for the people who light up your life.</p><ButtonLink href="#collection">Shop Diwali Gifts</ButtonLink><span className="festive-banner-starting">Gifts starting at ₹439</span></div>
+      <a className="festive-banner-gift festive-banner-right" href={productHref("classic-8x8")} aria-label="Explore the Classic 8 × 8 Hamper"><span className="festive-gift-halo" aria-hidden="true" /><img src="/assets/products/classic-8x8.webp" alt="Classic Diwali hamper with cashews, sweets, candles and Shubh-Labh" fetchPriority="high" /></a>
     </div>
-    <a href="#occasions" className="scroll-cue"><span>SCROLL TO DISCOVER</span><i /></a>
+    <div className="festive-banner-ribbon"><span>PERSONALISE YOUR GIFTS</span><span aria-hidden="true">✦</span><span>PAN INDIA SHIPPING</span><span aria-hidden="true">✦</span><span>CURATING EMOTIONS</span></div>
   </section>;
 }
 
