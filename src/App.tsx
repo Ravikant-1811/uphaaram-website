@@ -1,24 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
+import { giftCategories, categoryHref, faqs } from "./content";
+import { products, productHref, formatPrice, collectionNames, type Product } from "./catalog";
 
 const photos = {
-  hero: "https://images.unsplash.com/photo-1764650909534-ebe7b1206466?auto=format&fit=crop&w=1600&q=88",
-  festive: "https://images.unsplash.com/photo-1774978238615-881981af6948?auto=format&fit=crop&w=1200&q=88",
-  wedding: "https://images.unsplash.com/photo-1720798198016-d943cb565856?auto=format&fit=crop&w=1400&q=88",
-  corporate: "https://images.unsplash.com/photo-1783331256641-c147508169b0?auto=format&fit=crop&w=1200&q=88",
-  craft: "https://images.unsplash.com/photo-1738322212738-40d684b36beb?auto=format&fit=crop&w=1200&q=88",
-  chocolate: "https://images.unsplash.com/photo-1772985741593-da20690af07c?auto=format&fit=crop&w=1000&q=88",
-  chocolateDark: "https://images.unsplash.com/photo-1772986239852-bd95248017e1?auto=format&fit=crop&w=1000&q=88",
-  gold: "https://images.unsplash.com/photo-1576579310188-eef1e26e417a?auto=format&fit=crop&w=1200&q=88",
-  gift: "https://images.unsplash.com/photo-1643224962962-bc1ca22c753a?auto=format&fit=crop&w=1200&q=88",
-  jewel: "https://images.unsplash.com/photo-1731068381691-dd9f121114e9?auto=format&fit=crop&w=1000&q=88",
+  hero: "/assets/products/premium-10x10.webp",
+  festive: "/assets/products/classic-12x12.webp",
+  wedding: "/assets/products/mini-3-jar.webp",
+  corporate: "/assets/products/premium-12x12.webp",
+  craft: "/assets/products/basic-12x12.webp",
+  chocolate: "/assets/products/premium-8x8.webp",
+  chocolateDark: "/assets/products/classic-10x10.webp",
+  gold: "/assets/products/god-figure-toran.webp",
+  gift: "/assets/products/mini-2-jar.webp",
+  jewel: "/assets/products/mini-4-cavity.webp",
 };
-
-const collections = [
-  { name: "The Mini Celebration Box", collection: "MINI COLLECTION", price: "₹799", image: photos.jewel },
-  { name: "Sunehri Festive Hamper", collection: "CLASSIC COLLECTION", price: "₹1,249", image: photos.festive },
-  { name: "Noor Premium Hamper", collection: "PREMIUM COLLECTION", price: "₹1,619", image: photos.hero },
-  { name: "Mehfil Traditional Hamper", collection: "TRADITIONAL COLLECTION", price: "₹2,199", image: photos.gold },
-];
+const collections = [products[0], products[4], products[7], products[10]];
 
 const occasionCards = [
   { title: "Festive Gifting", text: "Tradition, beautifully reimagined", image: photos.festive, route: "festive" },
@@ -46,11 +42,7 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
 }
 
 function Logo({ light = false }: { light?: boolean }) {
-  return <a href="#home" className={`logo ${light ? "logo-light" : ""}`} aria-label="Uphaaram home">
-    <span className="logo-mark"><span>U</span></span>
-    <span className="logo-name">UPHAARAM</span>
-    <span className="logo-tag">CURATING EMOTIONS</span>
-  </a>;
+  return <a href="#home" className={`logo ${light ? "logo-light" : ""}`} aria-label="Uphaaram home"><img className="brand-logo" src="/assets/brand/uphaaram-logo.png" alt="Uphaaram — Curating Emotions" /></a>;
 }
 
 function ButtonLink({ href, children, secondary = false, light = false, className = "" }: { href: string; children: React.ReactNode; secondary?: boolean; light?: boolean; className?: string }) {
@@ -87,15 +79,13 @@ function SectionHeading({ eyebrow, title, text, align = "center", light = false 
   </div>;
 }
 
-function ProductCard({ product, index = 0 }: { product: typeof collections[number]; index?: number }) {
+function ProductCard({ product }: { product: Product; index?: number }) {
   return <article className="product-card">
-    <a href="#product" className="product-image">
-      <img src={product.image} alt={product.name} />
-      <span className="custom-badge">CUSTOMISABLE</span>
-      <button aria-label={`Save ${product.name}`}><Icon name="heart" size={19} /></button>
-      <span className="quick-view">QUICK VIEW</span>
+    <a href={productHref(product.id)} className="product-image">
+      <img src={product.image} alt={product.name} loading="lazy" />
+      <span className="custom-badge">CUSTOMISABLE</span><span className="quick-view">VIEW GIFT</span>
     </a>
-    <div className="product-info"><p>{product.collection}</p><a href="#product"><h3>{product.name}</h3></a><div><span>From {product.price}</span><a href="#product" aria-label="View gift"><Icon name="arrow" size={18} /></a></div></div>
+    <div className="product-info"><p>{product.collection}</p><a href={productHref(product.id)}><h3>{product.name}</h3></a><div><span>{product.starting ? "From " : ""}{formatPrice(product.price)}</span><a href={productHref(product.id)} aria-label={`View ${product.name}`}><Icon name="arrow" size={18} /></a></div></div>
   </article>;
 }
 
@@ -112,7 +102,7 @@ function Hero() {
       </div>
       <div className="hero-visual">
         <div className="gold-arch" />
-        <div className="hero-image"><img src={photos.hero} alt="Ornate premium gift boxes with gold ribbon" /></div>
+        <div className="hero-image"><img src={photos.hero} alt="Uphaaram Premium 10 × 10 Hamper" /></div>
         <div className="floating-card"><span>THE ART OF GIFTING</span><p>Made with intention.<br />Remembered with love.</p></div>
         <div className="image-count"><span>01</span><i /><span>04</span></div>
       </div>
@@ -139,7 +129,7 @@ function SignatureCollections() {
 
 function Story() {
   return <section className="story section">
-    <div className="story-images"><div className="story-main"><img src={photos.craft} alt="Artisan carefully preparing a handcrafted gift" /></div><div className="story-detail"><img src={photos.chocolate} alt="Handcrafted chocolate and nuts" /></div><span className="story-seal"><Icon name="lotus" size={28} />THOUGHTFULLY<br />CURATED</span></div>
+    <div className="story-images"><div className="story-main"><img src={photos.craft} alt="Uphaaram Basic 12 × 12 Hamper" /></div><div className="story-detail"><img src={photos.chocolate} alt="Premium hamper with dry fruits and handmade chocolates" /></div><span className="story-seal"><Icon name="lotus" size={28} />THOUGHTFULLY<br />CURATED</span></div>
     <div className="story-copy"><p className="eyebrow">THE UPHAARAM STORY</p><h2>Gifting is more than<br /><em>what's inside the box.</em></h2><p>At Uphaaram, every detail is thoughtfully chosen, beautifully arranged and personalised to turn gifting into an emotion worth remembering.</p><p>Rooted in Indian traditions and shaped by a contemporary eye, each hamper tells a story of care, craft and celebration.</p><ButtonLink href="#about" secondary>Our Story</ButtonLink><div className="signature-mark">Uphaaram <i /></div></div>
   </section>;
 }
@@ -147,7 +137,7 @@ function Story() {
 function Personalisation() {
   const steps = [["01", "Choose your hamper", "Begin with a style that feels just right."], ["02", "Select your favourites", "From artisanal treats to festive accents."], ["03", "Personalise the details", "Names, notes and packaging, made theirs."]];
   return <section className="personalise navy-section">
-    <div className="personalise-art"><img src={photos.chocolateDark} alt="Artisan chocolates for a custom hamper" /><div className="orbit orbit-one" /><div className="orbit orbit-two" /></div>
+    <div className="personalise-art"><img src={photos.chocolateDark} alt="Classic hamper with makhana, dry fruits and a matka candle" /><div className="orbit orbit-one" /><div className="orbit orbit-two" /></div>
     <div className="personalise-content"><SectionHeading eyebrow="CURATED FOR YOU" title={<>Make it truly <em>theirs.</em></>} text="Every story is different. Your gift should be too." align="left" light />
       <div className="steps">{steps.map(([n, title, text]) => <div className="step" key={n}><span>{n}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div>
       <div className="personalise-actions"><ButtonLink href="#custom" light>Start Customising</ButtonLink><a href="https://wa.me/919773137420" className="text-link"><Icon name="whatsapp" size={18} /> Enquire on WhatsApp</a></div>
@@ -158,8 +148,8 @@ function Personalisation() {
 const hamperOptions = [
   { category: "Makhana", items: ["Salt & Pepper", "Tomato", "Cream & Onion", "Peri-Peri"] },
   { category: "Chocolate", items: ["Raisin Chocolate", "Cashew Crunch", "Almond Crunch", "Chocolate Biscuit"] },
-  { category: "Dry Fruits", items: ["Salted Cashews", "Salted Almonds", "Pistachios", "Raisins"] },
-  { category: "Candles", items: ["Motichoor Ladoo", "Modak", "Daisy", "Lotus"] },
+  { category: "Dry Fruits", items: ["Roasted Salted Cashews", "Roasted Salted Almonds"] },
+  { category: "Candles", items: ["Motichoor Ladoo", "Modak", "Daisy"] },
 ];
 
 function HamperBuilder() {
@@ -175,7 +165,7 @@ function HamperBuilder() {
         <div className="builder-options"><p className="eyebrow">STEP 3 · PICK YOUR PRODUCTS</p><h3>What would you like to add?</h3>
           <div className="category-tabs">{hamperOptions.map((o, i) => <button className={category === i ? "active" : ""} onClick={() => setCategory(i)} key={o.category}>{o.category}</button>)}</div>
           <div className="option-list">{hamperOptions[category].items.map(item => <button className={selected.includes(item) ? "selected" : ""} onClick={() => toggle(item)} key={item}><span>{selected.includes(item) ? "✓" : "+"}</span>{item}</button>)}</div>
-          <div className="hamper-total"><div><p>YOUR CURATED HAMPER</p><strong>From ₹{899 + selected.length * 175}</strong><span>Final price after confirmation</span></div><ButtonLink href="#contact">Continue</ButtonLink></div>
+          <div className="hamper-total"><div><p>YOUR CURATED HAMPER</p><strong>Price on enquiry</strong><span>Final price after confirmation</span></div><ButtonLink href="#contact">Continue</ButtonLink></div>
         </div>
       </div>
     </div>
@@ -198,7 +188,7 @@ function Corporate() {
 
 function Wedding() {
   return <section className="wedding section">
-    <div className="wedding-image"><img src={photos.wedding} alt="Elegant wedding gifts arranged on a table" /><div className="arch-frame" /></div>
+    <div className="wedding-image"><img src={photos.wedding} alt="Uphaaram three-jar gift hamper" /><div className="arch-frame" /></div>
     <div className="wedding-copy"><p className="eyebrow">WEDDING & OCCASION GIFTING</p><h2>For celebrations<br /><em>that become memories.</em></h2><p>From the first welcome to the final farewell, make every gesture feel as special as the occasion itself.</p><div className="occasion-tags">{["Wedding Favours", "Welcome Hampers", "Bridal Party", "Family Gifts", "Return Gifts"].map(x => <span key={x}>{x}</span>)}</div><ButtonLink href="#wedding" secondary>Explore Wedding Gifting</ButtonLink></div>
   </section>;
 }
@@ -218,7 +208,7 @@ function WhatsAppCta() {
 }
 
 function Home() {
-  return <><Hero /><Occasions /><SignatureCollections /><Story /><Personalisation /><HamperBuilder /><FestiveSection /><Corporate /><Wedding /><WhyUs /><section className="section bestsellers"><div className="heading-row"><SectionHeading eyebrow="MOST LOVED" title={<>Gifts worth <em>remembering</em></>} align="left" /><ButtonLink href="#shop" secondary>Shop Bestsellers</ButtonLink></div><div className="product-grid">{[...collections].reverse().map(p => <ProductCard product={p} key={p.name} />)}</div></section><Instagram /><WhatsAppCta /></>;
+  return <><Hero /><ShopCategories /><SignatureCollections /><Story /><Personalisation /><HamperBuilder /><FestiveSection /><Corporate /><Wedding /><WhyUs /><section className="section bestsellers"><div className="heading-row"><SectionHeading eyebrow="THE UPHAARAM EDIT" title={<>Gifts worth <em>remembering</em></>} align="left" /><ButtonLink href="#shop" secondary>Explore Gifts</ButtonLink></div><div className="product-grid">{[...collections].reverse().map(p => <ProductCard product={p} key={p.name} />)}</div></section><Instagram /><WhatsAppCta /></>;
 }
 
 type LandingData = {
@@ -244,14 +234,7 @@ const pageData: Record<"festive" | "wedding" | "corporate" | "custom", LandingDa
     sectionEyebrow: "THE FESTIVE EDIT",
     sectionTitle: "A little light, a lot of joy.",
     sectionCopy: "Modern keepsakes rooted in the colours, rituals and warmth of Indian celebrations.",
-    categories: [
-      { title: "Diwali Hampers", text: "Abundant, luminous and made for sharing.", image: photos.hero },
-      { title: "Shubh Labh", text: "Auspicious accents for beautiful beginnings.", image: photos.festive },
-      { title: "Festive Candles", text: "Hand-poured light in celebratory forms.", image: photos.chocolate },
-      { title: "Toran & Decor", text: "Tradition, thoughtfully reimagined.", image: photos.gold },
-      { title: "Traditional Gifts", text: "Keepsakes with an unmistakably Indian soul.", image: photos.jewel },
-      { title: "Festive Favourites", text: "Artisanal treats everyone will love.", image: photos.chocolateDark },
-    ],
+    categories: giftCategories.map(category => ({ title: category.name, text: category.description, image: category.image })),
     features: ["Festive-ready packaging", "Personalised message cards", "Pan-India delivery", "Bulk celebration orders"],
     seoTitle: "Festive gifting that feels personal",
     seoCopy: "Explore premium Diwali hampers, traditional gifting, candles, torans and personalised festive gifts. Every Uphaaram festive gift is assembled by hand and can be curated around your recipient, budget and celebration.",
@@ -264,14 +247,7 @@ const pageData: Record<"festive" | "wedding" | "corporate" | "custom", LandingDa
     sectionEyebrow: "FOR EVERY CHAPTER",
     sectionTitle: "From the first welcome to the final farewell.",
     sectionCopy: "Thoughtful gifts designed to feel at home in your celebration and cherished long after it.",
-    categories: [
-      { title: "Wedding Favours", text: "A beautiful thank-you for every guest.", image: photos.gold },
-      { title: "Welcome Hampers", text: "Warm arrivals, thoughtfully arranged.", image: photos.hero },
-      { title: "Bridal Hampers", text: "A little indulgence for the bride-to-be.", image: photos.jewel },
-      { title: "Family Gifts", text: "Meaningful gestures for your closest circle.", image: photos.gift },
-      { title: "Return Gifts", text: "Personal keepsakes made to be remembered.", image: photos.wedding },
-      { title: "Special Occasions", text: "Anniversaries, milestones and joyful beginnings.", image: photos.chocolate },
-    ],
+    categories: giftCategories.map(category => ({ title: category.name, text: category.description, image: category.image })),
     features: ["Names and monograms", "Theme-matched packaging", "Welcome note personalisation", "Venue and multi-address delivery"],
     seoTitle: "Wedding gifts, made part of your story",
     seoCopy: "Curate wedding favours, bridal hampers, welcome gifts, return gifts and personalised family gifting with Uphaaram. We work around your palette, event style, quantity and budget to create a cohesive gifting experience.",
@@ -284,14 +260,7 @@ const pageData: Record<"festive" | "wedding" | "corporate" | "custom", LandingDa
     sectionEyebrow: "GIFT WITH INTENTION",
     sectionTitle: "Beautifully representing your brand.",
     sectionCopy: "From intimate leadership gestures to large festive programmes, every detail is managed with care.",
-    categories: [
-      { title: "Employee Gifting", text: "Celebrate teams and important milestones.", image: photos.hero },
-      { title: "Client Gifts", text: "Thoughtful gestures that strengthen relationships.", image: photos.corporate },
-      { title: "Partner Gifting", text: "Premium expressions of appreciation.", image: photos.gold },
-      { title: "Event Hampers", text: "On-brand gifts for memorable gatherings.", image: photos.gift },
-      { title: "Festive Programmes", text: "Seamless gifting across teams and cities.", image: photos.festive },
-      { title: "Welcome Kits", text: "Make every new beginning feel special.", image: photos.jewel },
-    ],
+    categories: giftCategories.map(category => ({ title: category.name, text: category.description, image: category.image })),
     features: ["Custom branded packaging", "Bulk ordering support", "Personal notes", "Multi-location delivery"],
     seoTitle: "Corporate gifts that leave a lasting impression",
     seoCopy: "Uphaaram creates premium corporate hampers for employees, clients, partners, events and festivals. Choose budget-based curation, branded sleeves, personalised notes and dependable multi-location fulfilment.",
@@ -304,14 +273,7 @@ const pageData: Record<"festive" | "wedding" | "corporate" | "custom", LandingDa
     sectionEyebrow: "THE POSSIBILITIES",
     sectionTitle: "Every detail, considered.",
     sectionCopy: "Choose what goes in, how it looks and the feeling it leaves behind.",
-    categories: [
-      { title: "Packaging", text: "Boxes, trays, baskets and keepsakes.", image: photos.hero },
-      { title: "Artisanal Treats", text: "Makhana, dry fruits and handmade chocolates.", image: photos.chocolateDark },
-      { title: "Candles & Decor", text: "Celebratory forms and fragrant details.", image: photos.festive },
-      { title: "Personal Notes", text: "Words beautifully printed or handwritten.", image: photos.gift },
-      { title: "Occasion Styling", text: "Colours and accents matched to the moment.", image: photos.gold },
-      { title: "Names & Monograms", text: "Personal finishes created just for them.", image: photos.jewel },
-    ],
+    categories: giftCategories.map(category => ({ title: category.name, text: category.description, image: category.image })),
     features: ["Flexible budgets", "Choice of products", "Personalised packaging", "One-to-one curation"],
     seoTitle: "Personalised hampers, curated around you",
     seoCopy: "Build a custom gift hamper with your choice of packaging, dry fruits, chocolates, makhana, candles, decor and message cards. Tell us your occasion and budget, and our team will curate the details beautifully.",
@@ -326,26 +288,49 @@ const processSteps = [
   ["We curate it beautifully", "We finish, pack and deliver with care."],
 ];
 
-function Form({ corporate = false }: { corporate?: boolean }) {
-  return <form className="enquiry-form" onSubmit={e => e.preventDefault()}>
-    <div><label>Name<input placeholder="Your full name" /></label><label>Phone<input placeholder="+91" type="tel" /></label></div>
-    <div><label>Email<input placeholder="you@email.com" type="email" /></label><label>{corporate ? "Company" : "Occasion"}<input placeholder={corporate ? "Company name" : "e.g. Wedding, Diwali"} /></label></div>
-    <div><label>Budget<select defaultValue=""><option value="" disabled>Select a range</option><option>Under ₹1,000</option><option>₹1,000 – ₹2,500</option><option>₹2,500 – ₹5,000</option><option>Above ₹5,000</option></select></label><label>Quantity<input placeholder="Number of gifts" type="number" /></label></div>
-    <div><label>Delivery City<input placeholder="City" /></label><label>Required Date<input type="date" /></label></div>
-    <label>Tell us what you have in mind<textarea rows={4} placeholder="Share the occasion, style and any personalisation you would love..." /></label>
-    <button className="btn btn-primary" type="submit">{corporate ? "Request a Proposal" : "Request a Custom Hamper"}<Icon name="arrow" /></button>
+function Form({ corporate = false, category = "" }: { corporate?: boolean; category?: string }) {
+  const [prepared, setPrepared] = useState(false);
+  return <form className="enquiry-form" onSubmit={event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const body = Array.from(data.entries()).map(([key, value]) => `${key}: ${value}`).join("\n");
+    window.location.href = `mailto:uphaaram.gifting@gmail.com?subject=${encodeURIComponent(`Gifting enquiry${category ? ` — ${category}` : ""}`)}&body=${encodeURIComponent(body)}`;
+    setPrepared(true);
+  }}>
+    <div><label>Name<input name="Name" placeholder="Your full name" required autoComplete="name" /></label><label>Phone<input name="Phone" placeholder="+91" type="tel" autoComplete="tel" /></label></div>
+    <div><label>Email<input name="Email" placeholder="you@email.com" type="email" required autoComplete="email" /></label><label>{corporate ? "Company" : "Occasion / category"}<input name={corporate ? "Company" : "Occasion / category"} defaultValue={category} placeholder={corporate ? "Company name" : "e.g. Wedding, Diwali"} /></label></div>
+    <div><label>Budget<select name="Budget" defaultValue=""><option value="" disabled>Select a range</option><option>Under ₹1,000</option><option>₹1,000 – ₹2,500</option><option>₹2,500 – ₹5,000</option><option>Above ₹5,000</option></select></label><label>Quantity<input name="Quantity" placeholder="Number of gifts" type="number" min="1" /></label></div>
+    <div><label>Delivery City<input name="Delivery City" placeholder="City" /></label><label>Required Date<input name="Required Date" type="date" /></label></div>
+    <label>Tell us what you have in mind<textarea name="Message" rows={4} required placeholder="Share the occasion, style and any personalisation you would love..." /></label>
+    <p className="form-note">This opens your email app with your enquiry. Send the email there to get in touch.</p>
+    <button className="btn btn-primary" type="submit">Prepare Email Enquiry<Icon name="arrow" /></button>
+    {prepared && <p role="status" className="form-note">Please send the prepared draft in your email app. If it did not open, email <a href="mailto:uphaaram.gifting@gmail.com">uphaaram.gifting@gmail.com</a> or <a href="https://wa.me/919773137420">message us on WhatsApp</a>.</p>}
   </form>;
 }
 
+function ShopCategories() {
+  return <section className="section category-directory" id="categories">
+    <SectionHeading eyebrow="THE DIWALI COLLECTION" title={<>Shop by <em>Category</em></>} text="Explore our Mini, Basic, Classic, Premium and Traditional collections." />
+    <div className="pdf-category-grid">{giftCategories.map((category, index) => <a className="pdf-category-card" href={categoryHref(category.slug)} key={category.slug}><div className="pdf-category-image"><img src={category.image} alt={category.name} loading="lazy" /></div><div className="pdf-category-copy"><span className="eyebrow">{String(index + 1).padStart(2, "0")}</span><h3>{category.name}</h3><p>{category.description}</p><span className="category-explore">Explore collection <Icon name="arrow" size={16} /></span></div></a>)}</div>
+  </section>;
+}
+
+function CategoryPage({ slug }: { slug: string }) {
+  const category = giftCategories.find(item => item.slug === slug);
+  if (!category) return <main className="simple-page"><h1>Category not found</h1><ButtonLink href="#shop">Explore Categories</ButtonLink></main>;
+  const categoryProducts = products.filter(product => product.collection === category.name);
+  return <main className="inner-page category-page"><div className="breadcrumbs"><a href="#home">Home</a><span>/</span><a href="#shop">Shop by Category</a><span>/</span><b>{category.name}</b></div><section className="simple-hero"><p className="eyebrow">{category.group}</p><h1>{category.name}</h1><p>{category.description}</p><p>Tell us your ideas, quantity and budget. We’ll help you explore suitable options and confirm availability, pricing and delivery before you order.</p><ButtonLink href="#enquiry">Enquire About {category.name}</ButtonLink></section>{categoryProducts.length > 0 && <section className="section"><SectionHeading eyebrow="THE DIWALI COLLECTION" title={category.name} /><div className="product-grid">{categoryProducts.map(product => <ProductCard product={product} key={product.id} />)}</div></section>}<section id="enquiry" className="form-section"><div><p className="eyebrow">LET’S MAKE EVERY GIFT SPECIAL</p><h2>A thoughtful gift,<br /><em>with your story.</em></h2><p>Share your requirements with our gifting studio in Vadodara. Pan India shipping available.</p><a href="https://wa.me/919773137420" className="text-link dark"><Icon name="whatsapp" /> Enquire on WhatsApp</a></div><Form category={category.name} /></section><ShopCategories /></main>;
+}
+
 function EditorialPage({ type }: { type: keyof typeof pageData }) {
-  const data = pageData[type];
+  const data = { ...pageData[type], sectionEyebrow: "THE DIWALI COLLECTION", sectionTitle: "Explore our gift collections", sectionCopy: "Mini, Basic, Classic, Premium and Traditional hampers.", categories: giftCategories.map(category => ({ title: category.name, text: category.description, image: category.image, route: categoryHref(category.slug) })) };
   return <main className="inner-page">
     <section className="inner-hero"><div><p className="eyebrow">{data.eyebrow}</p><h1>{data.title}</h1><p>{data.intro}</p><div className="hero-actions"><ButtonLink href="#enquiry">Begin an Enquiry</ButtonLink><ButtonLink href="#collection" secondary>Explore Gifts</ButtonLink></div></div><div><img src={data.image} alt={data.eyebrow} /></div></section>
-    <section className="landing-categories section"><SectionHeading eyebrow={data.sectionEyebrow} title={data.sectionTitle} text={data.sectionCopy} /><div className="landing-grid">{data.categories.map((category, index) => <a href="#collection" className="landing-card" key={category.title}><div><img src={category.image} alt={category.title} /><span>0{index + 1}</span></div><h3>{category.title}</h3><p>{category.text}</p><i><Icon name="arrow" /></i></a>)}</div></section>
+    <section className="landing-categories section"><SectionHeading eyebrow={data.sectionEyebrow} title={data.sectionTitle} text={data.sectionCopy} /><div className="landing-grid">{data.categories.map((category, index) => <a href={category.route} className="landing-card" key={category.title}><div><img src={category.image} alt={category.title} /><span>0{index + 1}</span></div><h3>{category.title}</h3><p>{category.text}</p><i><Icon name="arrow" /></i></a>)}</div></section>
     <section className="service-band"><div><p className="eyebrow">{type === "corporate" ? "BUILT FOR BUSINESS" : "MADE AROUND YOU"}</p><h2>{type === "corporate" ? <>From one thoughtful brief<br /><em>to every doorstep.</em></> : <>Personal from the first detail<br /><em>to the final ribbon.</em></>}</h2></div><div className="service-features">{data.features.map((feature, index) => <span key={feature}><b>0{index + 1}</b>{feature}</span>)}</div></section>
     <section className="process section"><SectionHeading eyebrow="HOW IT WORKS" title={type === "corporate" ? <>Seamless, from brief <em>to delivery</em></> : <>Your idea, <em>beautifully brought to life</em></>} /><div className="process-grid">{processSteps.map(([title, copy], i) => <div key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{copy}</p></div>)}</div></section>
     {type === "custom" && <HamperBuilder />}
-    <section className="editorial-gallery section"><div className="gallery-tall"><img src={data.categories[1].image} alt={`${data.eyebrow} detail`} /></div><div className="gallery-copy"><p className="eyebrow">CRAFTED WITH CARE</p><h2>Quiet details.<br /><em>Lasting impressions.</em></h2><p>Every gift is assembled by hand, layered with thoughtful details and finished only when it feels completely right.</p><img src={data.categories[3].image} alt="A close-up of Uphaaram gift craftsmanship" /></div><div className="gallery-small"><img src={data.categories[4].image} alt={`${data.eyebrow} presentation`} /></div></section>
+    <section className="editorial-gallery section"><div className="gallery-tall"><img src={data.categories[1].image} alt={`${data.eyebrow} detail`} /></div><div className="gallery-copy"><p className="eyebrow">CRAFTED WITH CARE</p><h2>Quiet details.<br /><em>Lasting impressions.</em></h2><p>Every gift is assembled by hand, layered with thoughtful details and finished only when it feels completely right.</p><img src={data.categories[3].image} alt="Uphaaram collection detail" /></div><div className="gallery-small"><img src={data.categories[4].image} alt={`${data.eyebrow} presentation`} /></div></section>
     <section id="enquiry" className="form-section"><div><p className="eyebrow">LET'S CREATE TOGETHER</p><h2>{type === "corporate" ? <>A proposal, crafted<br /><em>for your brand.</em></> : <>Tell us what you're<br /><em>celebrating.</em></>}</h2><p>Share a few details and our gifting team will get back to you within one business day.</p><a href="https://wa.me/919773137420" className="text-link dark"><Icon name="whatsapp" /> Or chat on WhatsApp</a></div><Form corporate={type === "corporate"} /></section>
     <section className="seo-copy section"><p className="eyebrow">UPHAARAM GIFTING</p><h2>{data.seoTitle}</h2><p>{data.seoCopy}</p></section>
     <WhatsAppCta />
@@ -353,69 +338,65 @@ function EditorialPage({ type }: { type: keyof typeof pageData }) {
 }
 
 function ShopPage() {
-  const signatureCollections = [
-    ["Mini Gift Collection", "Small gestures, beautifully considered.", "From ₹499", photos.jewel],
-    ["Basic Hamper Collection", "Everyday joys, elevated.", "From ₹799", photos.gift],
-    ["Classic Hamper Collection", "A timeless expression of care.", "From ₹1,249", photos.hero],
-    ["Premium Hamper Collection", "Abundant, refined and unforgettable.", "From ₹1,619", photos.corporate],
-    ["Traditional Collection", "Indian heritage in every detail.", "From ₹999", photos.festive],
-  ];
   return <main className="inner-page shop-index"><section className="collection-hero"><div><p className="eyebrow">THE COLLECTIONS</p><h1>Find a gift<br /><em>that feels just right.</em></h1><p>Explore signature hampers, meaningful keepsakes and celebration-ready gifts, each made to be personalised.</p><ButtonLink href="#collection">Shop All Gifts</ButtonLink></div><img src={photos.hero} alt="The Uphaaram gift collections" /></section>
-    <section className="section collection-index"><SectionHeading eyebrow="SIGNATURE COLLECTIONS" title={<>A collection for <em>every gesture</em></>} text="From a small thank-you to the grandest celebration." /><div className="collection-index-grid">{signatureCollections.map(([name, text, price, image], index) => <a href="#collection" className={`collection-index-card card-${index + 1}`} key={name}><img src={image} alt={name} /><div><span>0{index + 1}</span><p>{price}</p><h3>{name}</h3><small>{text}</small><i><Icon name="arrow" /></i></div></a>)}</div></section>
-    <section className="shop-paths"><SectionHeading eyebrow="SHOP YOUR WAY" title={<>Gifting made <em>beautifully simple</em></>} light /><div>{[["By Occasion", "Festive, wedding, milestones & more"], ["By Budget", "Thoughtful gifts at every price"], ["By Recipient", "For family, friends, teams & clients"], ["Personalised", "Made especially for them"]].map(([title, copy]) => <a href="#collection" key={title}><h3>{title}</h3><p>{copy}</p><Icon name="arrow" /></a>)}</div></section>
-    <section className="section"><div className="heading-row"><SectionHeading eyebrow="MOST LOVED" title={<>Gifts our community <em>adores</em></>} align="left" /><ButtonLink href="#collection" secondary>View All Gifts</ButtonLink></div><div className="product-grid">{collections.map(product => <ProductCard product={product} key={product.name} />)}</div></section><WhatsAppCta /></main>;
+    <ShopCategories />
+
+    <section className="section"><div className="heading-row"><SectionHeading eyebrow="THE UPHAARAM EDIT" title={<>Thoughtful gifts, <em>beautifully curated</em></>} align="left" /><ButtonLink href="#collection" secondary>View All Gifts</ButtonLink></div><div className="product-grid">{collections.map(product => <ProductCard product={product} key={product.name} />)}</div></section><WhatsAppCta /></main>;
 }
 
-function CollectionPage() {
-  const [filter, setFilter] = useState("All Gifts");
+function CollectionPage({ initialCollection = "All Gifts" }: { initialCollection?: string }) {
+  const [filter, setFilter] = useState(initialCollection);
+  const [sort, setSort] = useState("Featured");
+  const [under1000, setUnder1000] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
-  const filters = ["All Gifts", "Under ₹1,000", "Festive", "Wedding", "Corporate", "Personalised"];
-  const filterGroups = [["Price", ["Under ₹1,000", "₹1,000 – ₹2,000", "Above ₹2,000"]], ["Occasion", ["Diwali", "Wedding", "Birthday", "Housewarming"]], ["Gift Type", ["Hampers", "Candles", "Decor", "Dry Fruits"]], ["Recipient", ["Family", "Friends", "Employees", "Clients"]]];
-  const FilterPanel = () => <div className="filter-panel"><div className="filter-title"><span>FILTER GIFTS</span><button onClick={() => setMobileFilters(false)} aria-label="Close filters"><Icon name="close" /></button></div>{filterGroups.map(([name, values]) => <div className="filter-group" key={name as string}><h3>{name}</h3>{(values as string[]).map(value => <label key={value}><input type="checkbox" /> <span>{value}</span></label>)}</div>)}</div>;
-  return <main className="inner-page shop-page"><section className="collection-hero compact"><div><p className="eyebrow">THE GIFT EDIT</p><h1>Gifts, curated<br /><em>with intention.</em></h1><p>Thoughtful hampers for every celebration, relationship and meaningful moment.</p></div><img src={photos.hero} alt="The Uphaaram gift collection" /></section><section className="catalog section"><div className="catalog-top"><p>Showing 16 curated gifts</p><div><button className="mobile-filter-trigger" onClick={() => setMobileFilters(true)}>Filters <span>+</span></button><select aria-label="Sort products"><option>Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest</option></select></div></div><div className="filter-chips">{filters.map(x => <button onClick={() => setFilter(x)} className={filter === x ? "active" : ""} key={x}>{x}</button>)}</div><div className="catalog-layout"><aside><FilterPanel /></aside><div className="catalog-products"><div className="product-grid">{[...collections, ...collections, ...collections].map((p, i) => <ProductCard key={`${p.name}-${i}`} product={{...p, name: i > 3 ? `${p.name} · ${["Saffron", "Ivory", "Heritage"][Math.floor(i / 4) - 1]} Edition` : p.name}} />)}</div><button className="load-more">Load more gifts <Icon name="arrow" /></button></div></div></section><div className={`filter-sheet ${mobileFilters ? "open" : ""}`}><FilterPanel /><button className="btn btn-primary" onClick={() => setMobileFilters(false)}>Show 16 Gifts</button></div></main>;
+  const visible = products.filter(product => (filter === "All Gifts" || product.collection === filter) && (!under1000 || product.price < 1000));
+  if (sort === "low") visible.sort((a, b) => a.price - b.price);
+  if (sort === "high") visible.sort((a, b) => b.price - a.price);
+  const FilterPanel = ({ mobile = false }: { mobile?: boolean }) => <div className="filter-panel"><div className="filter-title"><span>FILTER GIFTS</span><button onClick={() => setMobileFilters(false)} aria-label="Close filters"><Icon name="close" /></button></div><div className="filter-group"><h3>Price</h3><label><input type="checkbox" checked={under1000} onChange={event => setUnder1000(event.target.checked)} /> Under ₹1,000</label></div><div className="filter-group"><h3>Collection</h3>{["All Gifts", ...collectionNames].map(name => <label key={name}><input type="radio" name={mobile ? "mobile-collection" : "desktop-collection"} checked={filter === name} onChange={() => setFilter(name)} /> {name}</label>)}</div></div>;
+  return <main className="inner-page shop-page"><section className="collection-hero compact"><div><p className="eyebrow">THE DIWALI COLLECTION</p><h1>Gifts, curated<br /><em>with intention.</em></h1><p>Explore Uphaaram’s Mini, Basic, Classic, Premium and Traditional collections. Customisation available.</p></div><img src={photos.hero} alt="Uphaaram Premium 10 × 10 Hamper" /></section><section className="catalog section"><div className="catalog-top"><p>Showing {visible.length} of {products.length} gifts</p><div><button className="mobile-filter-trigger" onClick={() => setMobileFilters(true)}>Filters <span>+</span></button><select aria-label="Sort products" value={sort} onChange={event => setSort(event.target.value)}><option value="Featured">Featured</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option></select></div></div><div className="filter-chips">{["All Gifts", ...collectionNames].map(name => <button onClick={() => setFilter(name)} className={filter === name ? "active" : ""} key={name}>{name}</button>)}</div><div className="catalog-layout"><aside><FilterPanel /></aside><div className="catalog-products">{visible.length ? <div className="product-grid">{visible.map(product => <ProductCard key={product.id} product={product} />)}</div> : <p>No gifts match these filters. Try another collection or budget.</p>}</div></div><p className="catalog-note">Prices shown are from our Diwali brochure. Final customisation, availability, shipping and order total are confirmed before payment. Product designs and prints may vary.</p></section><div className={`filter-sheet ${mobileFilters ? "open" : ""}`}><FilterPanel mobile /><button className="btn btn-primary" onClick={() => setMobileFilters(false)}>Show {visible.length} Gifts</button></div></main>;
 }
 
-function ProductPage() {
-  const [choice, setChoice] = useState("Salted Cashews");
-  const [activeImage, setActiveImage] = useState(photos.hero);
-  const [openDetail, setOpenDetail] = useState("The Details");
+function ProductPage({ id = "premium-10x10" }: { id?: string }) {
+  const product = products.find(item => item.id === id);
+  const [activeImage, setActiveImage] = useState(product?.image || "");
+  const [message, setMessage] = useState("");
+  const [openDetail, setOpenDetail] = useState("Customisation");
+  if (!product) return <main className="simple-page"><h1>Gift not found</h1><ButtonLink href="#collection">Explore Gifts</ButtonLink></main>;
   const detailCopy: Record<string, string> = {
-    "The Details": "A 10 × 10 inch reusable keepsake box, hand-finished with premium ribbon and festive floral details.",
-    "Customisation": "Swap flavours, select your candle, add names or branding, and include a personalised message card.",
-    "Delivery & Care": "Please allow 3–5 working days for individual orders. Store edible products in a cool, dry place.",
+    "Customisation": "Different designs, prints and customisation options are available. Flavour options depend on the products in your hamper; upgrades may carry an additional charge. Contact us to confirm your selection.",
+    "Delivery & Ordering": "Pan India shipping available. Share your quantity, destination and required date so we can confirm availability, shipping and the final order total before payment.",
   };
-  const views = [photos.hero, photos.chocolate, photos.gold, photos.gift];
-  return <main className="product-page inner-page"><div className="breadcrumbs"><a href="#home">Home</a><span>/</span><a href="#collection">Premium Collection</a><span>/</span><b>Noor Hamper</b></div><section className="product-detail"><div className="gallery"><div className="thumbs">{views.map((image, i) => <button className={activeImage === image ? "active" : ""} onClick={() => setActiveImage(image)} key={image}><img src={image} alt={`Noor hamper view ${i + 1}`} /></button>)}</div><div className="gallery-main"><img src={activeImage} alt="Noor premium handcrafted hamper" /><span>Customisable</span></div></div><div className="product-summary"><p className="eyebrow">PREMIUM COLLECTION</p><h1>Noor Premium<br />10 × 10 Hamper</h1><div className="price">₹1,619 <span>Inclusive of taxes</span></div><p>A luminous celebration of indulgent treats and handcrafted details, arranged in our signature keepsake box.</p><div className="inside"><p>WHAT'S INSIDE</p><div>{["Cashews", "Almonds", "Handmade chocolates", "Flower candle", "Sweet box"].map(x => <span key={x}>{x}</span>)}</div></div><div className="customise"><p>CUSTOMISE YOUR DRY FRUIT</p><div>{["Salted Cashews", "Roasted Almonds", "Pistachios"].map(x => <button className={choice === x ? "active" : ""} onClick={() => setChoice(x)} key={x}>{x}</button>)}</div></div><label className="message-label">PERSONALISED MESSAGE<textarea placeholder="Write your message here..." /></label><ButtonLink href="#contact" className="full-btn">Enquire to Order</ButtonLink><a href="https://wa.me/919773137420" className="whatsapp-order"><Icon name="whatsapp" /> Chat on WhatsApp</a><div className="product-accordions">{Object.keys(detailCopy).map(title => <div className={openDetail === title ? "open" : ""} key={title}><button onClick={() => setOpenDetail(openDetail === title ? "" : title)}>{title}<span>{openDetail === title ? "−" : "+"}</span></button>{openDetail === title && <p>{detailCopy[title]}</p>}</div>)}</div></div></section><section className="product-values"><div><Icon name="hand" /><span>Handcrafted with care</span></div><div><Icon name="gift" /><span>Beautifully gift-ready</span></div><div><Icon name="sparkle" /><span>Personalised for you</span></div><div><Icon name="whatsapp" /><span>Concierge ordering</span></div></section><section className="section related"><SectionHeading eyebrow="CONTINUE EXPLORING" title={<>You may <em>also like</em></>} /><div className="product-grid">{collections.slice(0, 3).map(p => <ProductCard product={p} key={p.name} />)}</div></section></main>;
+  const views = [product.image, ...(product.gallery || [])];
+  const enquiry = `https://wa.me/919773137420?text=${encodeURIComponent(`Hi Uphaaram, I’m interested in the ${product.name} (${product.collection}), listed at ${product.starting ? "from " : ""}${formatPrice(product.price)}.\n${message ? `Message card: ${message}\n` : ""}Please help me with availability and customisation.`)}`;
+  return <main className="product-page inner-page"><div className="breadcrumbs"><a href="#home">Home</a><span>/</span><a href="#collection">{product.collection}</a><span>/</span><b>{product.name}</b></div><section className="product-detail"><div className={`gallery ${views.length === 1 ? "single-image" : ""}`}>{views.length > 1 && <div className="thumbs">{views.map((image, index) => <button className={activeImage === image ? "active" : ""} onClick={() => setActiveImage(image)} key={image}><img src={image} alt={`${product.name} view ${index + 1}`} /></button>)}</div>}<div className="gallery-main"><img src={activeImage} alt={product.name} /><span>Customisation available</span></div></div><div className="product-summary"><p className="eyebrow">{product.collection}</p><h1>{product.name}</h1><div className="price">{product.starting ? "From " : ""}{formatPrice(product.price)}<span>Brochure price · final total confirmed on enquiry</span></div><p>{product.description}</p><div className="inside"><p>WHAT’S INCLUDED</p><div>{product.contents.map(item => <span key={item}>{item}</span>)}</div></div><label className="message-label">PERSONALISED MESSAGE<textarea value={message} onChange={event => setMessage(event.target.value)} placeholder="Write your message here..." /></label><a href={enquiry} className="btn btn-primary full-btn"><Icon name="whatsapp" /> Enquire to Order</a><p className="catalog-note">Designs and prints may vary. Ask us about personalisation and your preferred packaging.</p><div className="product-accordions">{Object.keys(detailCopy).map(title => <div className={openDetail === title ? "open" : ""} key={title}><button aria-expanded={openDetail === title} onClick={() => setOpenDetail(openDetail === title ? "" : title)}>{title}<span>{openDetail === title ? "−" : "+"}</span></button>{openDetail === title && <p>{detailCopy[title]}</p>}</div>)}</div></div></section><section className="section related"><SectionHeading eyebrow="CONTINUE EXPLORING" title={<>You may <em>also like</em></>} /><div className="product-grid">{products.filter(item => item.collection === product.collection && item.id !== product.id).slice(0, 3).map(item => <ProductCard product={item} key={item.id} />)}</div></section></main>;
 }
 
 function ContactPage() {
-  return <main className="inner-page contact-page"><section className="contact-intro"><div><p className="eyebrow">GET IN TOUCH</p><h1>Let's curate<br /><em>something beautiful.</em></h1><p>Have an occasion in mind? Tell us what you are celebrating and we'll help create the perfect gifting experience.</p><div className="contact-method"><Icon name="whatsapp" /><span>WHATSAPP<a href="tel:+919773137420">+91 97731 37420</a><small>Monday–Saturday · 10am–7pm</small></span></div><div className="contact-method"><span className="at">@</span><span>INSTAGRAM<a href="https://instagram.com/uphaaram.gifting">@uphaaram.gifting</a><small>Follow our latest gifting stories</small></span></div></div><Form /></section><section className="contact-notes"><div><span>01</span><h3>Custom Hampers</h3><p>Share the occasion, recipient and budget. We will curate a thoughtful selection for you.</p></div><div><span>02</span><h3>Bulk Enquiries</h3><p>Planning gifts for a team, event or wedding? Tell us the quantity and delivery locations.</p></div><div><span>03</span><h3>Order Support</h3><p>Already placed an order? Message us on WhatsApp and our team will be happy to help.</p></div></section><WhatsAppCta /></main>;
+  return <main className="inner-page contact-page"><section className="contact-intro"><div><p className="eyebrow">GET IN TOUCH</p><h1>Let's Make Every<br /><em>Gift Special</em></h1><p>Have an occasion to celebrate, a special gift in mind, or a bulk gifting requirement? We’d love to help you create something memorable.</p><p>At Uphaaram | Gifting Studio, we curate thoughtful gifting experiences for every occasion — from festive hampers and wedding favours to corporate gifting and personalized surprises.</p><p>Tell us what you have in mind, and let’s create something beautiful together.</p><h2 className="contact-subheading">Contact Information</h2>
+    <div className="contact-method"><span className="at">@</span><span>EMAIL<a href="mailto:uphaaram.gifting@gmail.com">uphaaram.gifting@gmail.com</a></span></div>
+    <div className="contact-method"><Icon name="whatsapp" /><span>PHONE / WHATSAPP<a href="tel:+919773137420">+91 97731 37420</a><a href="https://wa.me/919773137420">Chat on WhatsApp</a></span></div>
+    <div className="contact-method"><span className="at">@</span><span>INSTAGRAM<a href="https://instagram.com/uphaaram.gifting">@uphaaram.gifting</a></span></div>
+    <div className="contact-method"><Icon name="heart" /><span>FACEBOOK<strong>Uphaaram | Gifting Studio</strong></span></div>
+    <div className="contact-method"><Icon name="lotus" /><span>LOCATION<strong>Vadodara, Gujarat, India</strong></span></div>
+    <div className="contact-method"><Icon name="gift" /><span>SHIPPING<strong>Pan India Shipping Available</strong></span></div>
+    </div><div><h2 className="contact-subheading">How Can We Help You?</h2><Form /></div></section><WhatsAppCta /></main>;
 }
 
 function AboutPage() {
-  return <main className="inner-page about-page"><section className="inner-hero"><div><p className="eyebrow">OUR STORY</p><h1>More than gifts.</h1><p>We believe every gift carries a little emotion. Uphaaram brings craft, tradition and personalisation together to help you express it beautifully.</p><ButtonLink href="#collection">Explore Our Gifts</ButtonLink></div><div><img src={photos.craft} alt="The hands and craft behind Uphaaram" /></div></section><section className="editorial-story section"><p className="eyebrow">THE PHILOSOPHY</p><h2>Every gift carries<br /><em>a little emotion.</em></h2><div className="story-columns"><p>Uphaaram began with a simple belief: the most meaningful gifts are not measured by what is inside, but by how they make someone feel. Every product, ribbon and handwritten note is chosen with that emotion in mind.</p><p>Our aesthetic draws from the quiet elegance of Indian craft—its warmth, symbolism and love of celebration—interpreted with a modern, refined sensibility.</p></div><blockquote>“More than gifts, emotions beautifully curated.”</blockquote></section><section className="about-craft"><div><img src={photos.chocolate} alt="Handcrafted artisanal treats" /></div><div><p className="eyebrow">BEHIND THE RIBBON</p><h2>Made slowly.<br /><em>Given wholeheartedly.</em></h2><p>We work with thoughtful makers, celebrate handcrafted details and assemble every hamper by hand. The result is gifting that feels personal—not produced.</p><div className="about-values">{["Craftsmanship", "Personalisation", "Indian heritage", "Joyful celebration"].map((value, i) => <span key={value}><b>0{i + 1}</b>{value}</span>)}</div></div><div><img src={photos.gift} alt="A meaningful gift being exchanged" /></div></section><WhyUs /><Instagram /><WhatsAppCta /></main>;
+  return <main className="inner-page about-page"><section className="inner-hero"><div><p className="eyebrow">ABOUT US · UPHAARAM | GIFTING STUDIO</p><h1>Every Gift Tells a Story.<br /><em>We’re Here to Make It Unforgettable.</em></h1><p>At <strong>Uphaaram | Gifting Studio</strong>, we believe gifting is more than exchanging presents — it’s about expressing emotions, celebrating relationships, and creating memories that last.</p><ButtonLink href="#shop">Explore Our Gifts</ButtonLink></div><div><img src={photos.craft} alt="Uphaaram festive hamper with traditional details" /></div></section>
+    <section className="editorial-story section"><p className="eyebrow">FROM OUR HOME, WITH LOVE</p><h2>Different journeys,<br /><em>one shared dream.</em></h2><div className="founder-story"><p>Our journey began with a simple idea, a creative mind, and a shared dream of building something of our own — right from home.</p><p>Founded by a <strong>saas-bahu duo, Varsha Gohil and Priya Kandoi Gohil</strong>, Uphaaram brings together creativity, passion, and the joy of making people feel special.</p></div>
+    <div className="founder-grid"><article><span>CO-FOUNDER</span><h3>Varsha Gohil</h3><p><strong>Varsha Gohil</strong>, a homemaker, brings warmth, thoughtful details, and a personal touch to every creation.</p></article><article><span>CO-FOUNDER</span><h3>Priya Kandoi Gohil</h3><p><strong>Priya Kandoi Gohil</strong>, a lawyer turned entrepreneur, brings a fresh perspective, creative ideas, and a vision to transform ordinary gifting into meaningful experiences.</p></article></div>
+    <div className="founder-story"><p>Different journeys, one shared dream — to make every gift feel personal, thoughtful, and unforgettable.</p><p>From wedding hampers and return gifts to corporate gifting and festive collections, every creation at Uphaaram is thoughtfully curated to reflect the occasion, the relationship, and the emotion behind it.</p><p>We started small, with a simple idea and the courage to begin. Today, we’re building a brand that celebrates the little things that mean so much — a heartfelt thank-you, a new beginning, a special celebration, or simply a reminder that someone cares.</p><p>Because for us, it has never been just about what’s inside the box. It’s about how it makes someone feel.</p></div><blockquote>Uphaaram — We don’t provide gift boxes; we curate experiences.</blockquote><p className="founder-signoff"><em>With love,<br /><strong>Varsha &amp; Priya</strong><br />The Founders of Uphaaram</em></p></section><WhyUs /><Instagram /><WhatsAppCta /></main>;
 }
-
-const faqs = [
-  ["Can I customise every hamper?", "Most Uphaaram hampers can be personalised. Depending on the collection, you can change products, flavours, candles, packaging, colours and message cards."],
-  ["How far in advance should I order?", "For individual hampers, allow 3–5 working days. Wedding, corporate and larger festive orders are best discussed 2–4 weeks in advance."],
-  ["Do you offer bulk and corporate gifting?", "Yes. We curate bulk gifts with budget-based options, branded packaging, personalised notes and multi-location delivery."],
-  ["Can you deliver to multiple addresses?", "Yes. Multi-address delivery is available for corporate, wedding and festive programmes. Share your address list with our gifting team."],
-  ["What can be personalised?", "Names, monograms, sleeves, ribbons, message cards, product selections and occasion styling can all be tailored to your brief."],
-  ["Do you ship across India?", "We offer pan-India delivery for most products. Delivery timelines and availability depend on the destination and hamper contents."],
-  ["How do I place an order?", "Uphaaram uses a concierge enquiry process. Send your selection through the enquiry form or WhatsApp, and our team will confirm customisation, availability and payment."],
-  ["Can I set a specific budget?", "Absolutely. Tell us your per-gift budget, quantity and occasion, and we will recommend the most beautiful options within it."],
-];
 
 function FaqPage() {
   const [open, setOpen] = useState(0);
-  return <main className="faq-page inner-page"><section className="simple-hero"><p className="eyebrow">HELP & GUIDANCE</p><h1>Frequently asked<br /><em>questions.</em></h1><p>Everything you need to know about customisation, ordering, delivery and care.</p></section><section className="faq-content section"><aside><p>QUICK LINKS</p>{["Customisation", "Ordering", "Bulk Gifting", "Delivery"].map(item => <a href="#faq" key={item}>{item}</a>)}<div><Icon name="whatsapp" /><h3>Still wondering?</h3><p>Our gifting team is only a message away.</p><a href="https://wa.me/919773137420">Chat on WhatsApp</a></div></aside><div className="faq-list">{faqs.map(([question, answer], index) => <div className={open === index ? "open" : ""} key={question}><button onClick={() => setOpen(open === index ? -1 : index)}><span>0{index + 1}</span>{question}<i>{open === index ? "−" : "+"}</i></button>{open === index && <p>{answer}</p>}</div>)}</div></section><WhatsAppCta /></main>;
+  return <main className="faq-page inner-page"><section className="simple-hero"><p className="eyebrow">HELP & GUIDANCE</p><h1>Frequently asked<br /><em>questions.</em></h1><p>Everything you need to know about customisation, ordering, delivery and care.</p></section><section className="faq-content section"><aside><p>QUICK LINKS</p>{[["Customisation", 1], ["Ordering", 6], ["Bulk Gifting", 2], ["Delivery", 5]].map(([item, index]) => <button type="button" onClick={() => { setOpen(Number(index)); document.getElementById(`faq-item-${index}`)?.scrollIntoView({ behavior: "smooth", block: "center" }); }} key={item}>{item}</button>)}<div><Icon name="whatsapp" /><h3>Still wondering?</h3><p>Our gifting team is only a message away.</p><a href="https://wa.me/919773137420">Chat on WhatsApp</a></div></aside><div className="faq-list">{faqs.map(([question, answer], index) => <div id={`faq-item-${index}`} className={open === index ? "open" : ""} key={question}><button aria-expanded={open === index} aria-controls={`faq-answer-${index}`} onClick={() => setOpen(open === index ? -1 : index)}><span>{String(index + 1).padStart(2, "0")}</span>{question}<i>{open === index ? "−" : "+"}</i></button><p id={`faq-answer-${index}`} hidden={open !== index}>{answer}</p></div>)}</div></section><WhatsAppCta /></main>;
 }
 
 function SearchPage() {
   const [query, setQuery] = useState("");
-  const products = [...collections, ...collections.map(p => ({ ...p, name: `${p.name} · Festive Edition` }))];
-  const results = query ? products.filter(p => `${p.name} ${p.collection}`.toLowerCase().includes(query.toLowerCase())) : products.slice(0, 4);
+  const results = query ? products.filter(p => `${p.name} ${p.collection} ${p.contents.join(" ")} Diwali festive hamper`.toLowerCase().includes(query.toLowerCase())) : products.slice(0, 4);
   return <main className="search-page inner-page"><section className="simple-hero"><p className="eyebrow">DISCOVER</p><h1>Find the perfect <em>gift.</em></h1><p>Search by occasion, recipient, collection or product.</p><div className="search-box"><input value={query} onChange={e => setQuery(e.target.value)} autoFocus placeholder="Try ‘festive hamper’ or ‘wedding’" /><button aria-label="Search"><Icon name="search" /></button></div><div className="search-suggestions"><span>POPULAR:</span>{["Diwali", "Wedding", "Under ₹1,000", "Corporate"].map(term => <button onClick={() => setQuery(term)} key={term}>{term}</button>)}</div></section><section className="section search-results"><div className="catalog-top"><p>{query ? `${results.length} results for “${query}”` : "Popular gifts right now"}</p></div>{results.length ? <div className="product-grid">{results.map((product, index) => <ProductCard product={product} key={`${product.name}-${index}`} />)}</div> : <div className="no-results"><Icon name="search" size={32} /><h2>No gifts found</h2><p>Try a different occasion, collection or recipient.</p><ButtonLink href="#collection">Explore All Gifts</ButtonLink></div>}</section></main>;
 }
 
@@ -435,7 +416,7 @@ function Footer() {
     ["ABOUT", ["Our Story", "Instagram", "Craft & Care"]],
   ];
   const footerRoute: Record<string, string> = { Collections: "shop", "Festive Gifts": "festive", "Wedding Gifts": "wedding", "Corporate Gifts": "corporate", "Personalised Hampers": "custom", Contact: "contact", Customisation: "custom", FAQs: "faq", "Delivery Information": "faq", "Our Story": "about", Instagram: "https://instagram.com/uphaaram.gifting", "Craft & Care": "about" };
-  return <footer><div className="footer-top"><div className="footer-brand"><Logo light /><p>More than gifts, emotions<br />beautifully curated.</p></div>{columns.map(([title, items]) => <div className="footer-column" key={title as string}><h3>{title}</h3>{(items as string[]).map(item => <a href={footerRoute[item].startsWith("http") ? footerRoute[item] : `#${footerRoute[item]}`} key={item}>{item}</a>)}</div>)}<div className="footer-contact"><h3>CONTACT</h3><a href="tel:+919773137420">+91 97731 37420</a><a href="https://instagram.com/uphaaram.gifting">@uphaaram.gifting</a></div></div><div className="newsletter"><div><p>A little celebration,<br /><em>delivered to your inbox.</em></p></div><form onSubmit={e => e.preventDefault()}><input type="email" placeholder="Your email address" aria-label="Email address" /><button aria-label="Subscribe"><Icon name="arrow" /></button></form></div><div className="footer-bottom"><span>© 2025 UPHAARAM. ALL RIGHTS RESERVED.</span><div><a href="#privacy">Privacy</a><a href="#terms">Terms</a></div><span>HANDCRAFTED WITH CARE IN INDIA</span></div></footer>;
+  return <footer><div className="footer-top"><div className="footer-brand"><Logo light /><p>More than gifts, emotions<br />beautifully curated.</p></div>{columns.map(([title, items]) => <div className="footer-column" key={title as string}><h3>{title}</h3>{(items as string[]).map(item => <a href={footerRoute[item].startsWith("http") ? footerRoute[item] : `#${footerRoute[item]}`} key={item}>{item}</a>)}</div>)}<div className="footer-contact"><h3>CONTACT</h3><a href="mailto:uphaaram.gifting@gmail.com">uphaaram.gifting@gmail.com</a><a href="tel:+919773137420">+91 97731 37420</a><a href="https://instagram.com/uphaaram.gifting">@uphaaram.gifting</a><p>Vadodara, Gujarat, India<br />Pan India Shipping Available</p></div></div><div className="newsletter"><div><p>A little celebration,<br /><em>delivered to your inbox.</em></p></div><form onSubmit={e => e.preventDefault()}><input type="email" placeholder="Your email address" aria-label="Email address" /><button aria-label="Subscribe"><Icon name="arrow" /></button></form></div><div className="footer-bottom"><span>© {new Date().getFullYear()} UPHAARAM. ALL RIGHTS RESERVED.</span><div><a href="#privacy">Privacy</a><a href="#terms">Terms</a></div><span>HANDCRAFTED WITH CARE IN INDIA</span></div></footer>;
 }
 
 function App() {
@@ -456,8 +437,11 @@ function App() {
   const page = useMemo(() => {
     if (route === "home") return <Home />;
     if (route === "shop") return <ShopPage />;
+    if (route.startsWith("category/")) return <CategoryPage key={route} slug={route.slice(9)} />;
     if (route === "collection" || route === "festive-shop") return <CollectionPage />;
+    if (route.startsWith("collection/")) return <CollectionPage key={route} initialCollection={decodeURIComponent(route.slice(11))} />;
     if (route === "product") return <ProductPage />;
+    if (route.startsWith("product/")) return <ProductPage key={route} id={route.slice(8)} />;
     if (route in pageData) return <EditorialPage type={route as keyof typeof pageData} />;
     if (route === "about") return <AboutPage />;
     if (route === "contact") return <ContactPage />;

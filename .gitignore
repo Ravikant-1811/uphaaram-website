@@ -10,3 +10,6 @@ vite.config.*.timestamp-*
 logs/
 *.log
 .tmp-*
+
+# Local visual verification screenshots
+artifacts/
